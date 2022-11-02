@@ -4,23 +4,14 @@ using WebMVC_API_Client.Services.Interfaces;
 
 namespace WebMVC_API_Client.Services
 {
-    public class Player : IPlayerService
+    public class PlayerService : IPlayerService
     {
         private readonly HttpClient _client;
-        private readonly object Position;
-        private object Name;
         public const string BasePath = "/api/Players/";
 
-        public HttpClient Id { get; private set; }
-        public object Line { get; private set; }
-
-        public Player(HttpClient client)
+        public PlayerService(HttpClient client)
         {
             _client = client ?? throw new ArgumentNullException(nameof(client));
-        }
-
-        public Player(object id, object name, object line, object position)
-        {
         }
 
         public async Task<IEnumerable<Player>> FindAll()
@@ -40,7 +31,7 @@ namespace WebMVC_API_Client.Services
 
             var response = await responseGet.ReadContentAsync<Player>();
 
-            var player = new Player(response.Id, response.Name, response.Line, response.Position);
+            var player = new Player(response.Id, response.Name, response.Number, response.Position, response.Line);
 
             return player;
         }

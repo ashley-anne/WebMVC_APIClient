@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using WebMVC_API_Client.Data;
 using WebMVC_API_Client.Models;
-using WebMVC_API_Client.Services;
 using WebMVC_API_Client.Services.Interfaces;
-using Player = WebMVC_API_Client.Services.Player;
 
 namespace WebMVC_API_Client.Controllers
 {
@@ -21,7 +13,7 @@ namespace WebMVC_API_Client.Controllers
 
         private static readonly HttpClient client = new HttpClient();
 
-        private string requestUri = "https://localhost:7117/api/Players";
+        private string requestUri = "https://localhost:7117/api/Players/";
 
         public PlayerController(IPlayerService service)
         {
@@ -33,6 +25,13 @@ namespace WebMVC_API_Client.Controllers
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
             client.DefaultRequestHeaders.Add("User-Agent", "Ashley's Team API");
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var response = await _service.FindAll();
+
+            return View(response);
         }
 
         // GET: VideoGame/Details/5
@@ -56,9 +55,9 @@ namespace WebMVC_API_Client.Controllers
         // POST: VideoGame/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,StudioId,MainCharacterId")] Player player, HttpClient id)
+        public async Task<IActionResult> Create([Bind("Id, Name, Number, Position, Line")] Player player)
         {
-            id = null;
+            player.Id = 0;
             var resultPost = await client.PostAsync<Player>(requestUri, player, new JsonMediaTypeFormatter());
 
             return RedirectToAction(nameof(Index));
@@ -79,9 +78,9 @@ namespace WebMVC_API_Client.Controllers
         // POST: VideoGame/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id, Number, Position, Line, Name")] Player player)
+        public async Task<IActionResult> Edit(int id, [Bind("Id, Name, Number, Position, Line")] Player player)
         {
-            if (id != Player.Id)
+            if (id != player.Id)
             {
                 return NotFound();
             }

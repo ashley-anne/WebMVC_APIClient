@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace WebMVC_API_Client.Models
+﻿namespace WebMVC_API_Client.Models
 {
     public class Player
     {
@@ -13,7 +11,7 @@ namespace WebMVC_API_Client.Models
         public Player(int? id, string? name, int number, string? position, string? line)
         {
 
-            Id = (int)id;
+            Id = id;
             Name = name;
             Number = number;
             Position = position;
@@ -22,14 +20,6 @@ namespace WebMVC_API_Client.Models
         public Player()
         {
             return;
-        }
-
-        public Player(int id, string? name, string? line, string? position)
-        {
-            Id = id;
-            Name = name;
-            Line = line;
-            Position = position;
         }
     }
 }
